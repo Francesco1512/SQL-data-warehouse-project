@@ -52,15 +52,15 @@ LEFT JOIN silver.erp_loc_a101 la
 ON		ci.cst_key = la.cid
 
 -- =================================================
--- Create Dimension: gold.dim_product
+-- Create Dimension: gold.dim_products
 -- =================================================
 	
-IF OBJECT_ID('gold.dim_product','V') IS NOT NULL
-	DROP VIEW gold.dim_product
+IF OBJECT_ID('gold.dim_products','V') IS NOT NULL
+	DROP VIEW gold.dim_products
 
 GO 
 
-CREATE VIEW gold.dim_product AS 
+CREATE VIEW gold.dim_products AS 
 select 
 	ROW_NUMBER() OVER (ORDER BY pn.prd_start_dt, pn.prd_key) as product_key,
 	pn.prd_id as product_id,
