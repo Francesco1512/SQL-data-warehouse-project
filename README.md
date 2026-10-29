@@ -112,7 +112,6 @@ The two reporting views consolidate the analyses into ready-to-use datasets (e.g
 - Columns: product key and name, category, subcategory, cost, last sale date, recency (months), product segment, lifespan (months), total orders, total sales, total quantity, total customers, average selling price, average order revenue, average monthly revenue.
 - Product segments: **High-Performer** (total sales above 50,000), **Mid-Range** (10,000 to 50,000), **Low-Performer** (below 10,000).
 
-> **Sample output.** The rows below are an illustrative excerpt of the output shown in the original course walkthrough, not the result of my own run. `recency` is computed against `GETDATE()`, so it changes with the execution date and is omitted here.
 
 `report_customers`
 
