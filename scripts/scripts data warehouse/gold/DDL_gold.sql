@@ -20,33 +20,6 @@ Usage:
 
 
 -- =================================================
--- Create Fact: gold.fact_sales
--- =================================================
-	
-IF OBJECT_ID('gold.fact_sales','V') IS NOT NULL
-	DROP VIEW gold.fact_sales
-
-GO 
-
-CREATE VIEW gold.fact_sales AS
-select 
-sd.sls_ord_num as order_number,
-pr.product_key,
-cu.customer_key,
-sd.sls_order_dt as order_date,
-sd.sls_ship_dt as ship_date,
-sd.sls_due_dt as due_date,
-sd.sls_sales as sales_amount,
-sd.sls_quantity as quantity,
-sd.sls_price as price
-from 
-silver.crm_sales_details sd
-LEFT JOIN gold.dimension_product pr
-ON sd.sls_prd_key = pr.product_number
-LEFT JOIN gold.dim_customers cu
-ON sd.sls_cust_id = cu.customer_id 
-
--- =================================================
 -- Create Dimension: gold.dim_customers
 -- =================================================
 	
@@ -79,15 +52,15 @@ LEFT JOIN silver.erp_loc_a101 la
 ON		ci.cst_key = la.cid
 
 -- =================================================
--- Create Dimension: gold.dimension_product
+-- Create Dimension: gold.dim_product
 -- =================================================
 	
-IF OBJECT_ID('gold.dimension_product','V') IS NOT NULL
-	DROP VIEW gold.dimension_product
+IF OBJECT_ID('gold.dim_product','V') IS NOT NULL
+	DROP VIEW gold.dim_product
 
 GO 
 
-CREATE VIEW gold.dimension_product AS 
+CREATE VIEW gold.dim_product AS 
 select 
 	ROW_NUMBER() OVER (ORDER BY pn.prd_start_dt, pn.prd_key) as product_key,
 	pn.prd_id as product_id,
@@ -105,3 +78,30 @@ select
 	LEFT JOIN silver.erp_px_cat_g1v2 px
 	ON        pn.cat_id = px.id
 	where pn.prd_end_dt is null   --filtering out historicals datas
+
+-- =================================================
+-- Create Fact: gold.fact_sales
+-- =================================================
+	
+IF OBJECT_ID('gold.fact_sales','V') IS NOT NULL
+	DROP VIEW gold.fact_sales
+
+GO 
+
+CREATE VIEW gold.fact_sales AS
+select 
+sd.sls_ord_num as order_number,
+pr.product_key,
+cu.customer_key,
+sd.sls_order_dt as order_date,
+sd.sls_ship_dt as ship_date,
+sd.sls_due_dt as due_date,
+sd.sls_sales as sales_amount,
+sd.sls_quantity as quantity,
+sd.sls_price as price
+from 
+silver.crm_sales_details sd
+LEFT JOIN gold.dimension_product pr
+ON sd.sls_prd_key = pr.product_number
+LEFT JOIN gold.dim_customers cu
+ON sd.sls_cust_id = cu.customer_id 
